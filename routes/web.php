@@ -26,7 +26,7 @@ Route::group(['middleware' => 'verified'], function () {
 
     Route::get('/edit-info',                    ['as' => 'users.edit_info',                          'uses' => 'Frontend\UsersController@edit_info']);
     Route::post('/edit-info',                   ['as' => 'users.update_info',                        'uses' => 'Frontend\UsersController@update_info']);
-    Route::post('/edit-password',               ['as' => 'users.update_password',                        'uses' => 'Frontend\UsersController@update_password']);
+    Route::post('/edit-password',               ['as' => 'users.update_password',                    'uses' => 'Frontend\UsersController@update_password']);
 
     Route::get('/create-post',                    ['as' => 'users.post.create',                      'uses' => 'Frontend\UsersController@create_post']);
     Route::post('/create-post',                   ['as' => 'users.post.store',                       'uses' => 'Frontend\UsersController@store_post']);
@@ -54,6 +54,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('password/email',                   ['as' => 'admin.password.email',        'uses' => 'Backend\Auth\ForgotPasswordController@sendResetLinkEmail']);
     Route::get('password/reset/{token}',            ['as' => 'admin.password.reset',        'uses' => 'Backend\Auth\ResetPasswordController@showResetForm']);
     Route::post('password/reset',                   ['as' => 'admin.password.update',       'uses' => 'Backend\Auth\ResetPasswordController@reset']);
+
+    Route::group(['middleware' => ['roles', 'role:admin|editor']], function () {
+        Route::get('/',                             ['as' => 'admin.index_route',           'uses' => 'Backend\AdminController@index']);
+        Route::get('/index',                        ['as' => 'admin.index',                 'uses' => 'Backend\AdminController@index']);
+    });
 });
 
 Route::get('/contact-us',                           ['as' => 'frontend.contact',            'uses' => 'Frontend\IndexController@contact']);
